@@ -1,28 +1,44 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Identifier {
-    string private name;
-    uint64 private dateOfBirth;
-    string private socialID;
-    string private nationality;
-    string private email;
-    string private phoneNumber;
-    address private owner = address(0);
+struct PersonalRecord {
+    string name;
+    uint64 dateOfBirth;
+    string socialID;
+    string nationality;
+    string email;
+    string phoneNumber;
+}
 
-    function store(string memory _name, uint64 _dateOfBirth, string memory _socialID, string memory _nationality, string memory _email, string memory _phoneNumber, address _owner) public returns (bool) {
+contract Identifier {
+
+
+    PersonalRecord private personalRecord;
+
+    address private owner = address(0);
+    address providerDID;
+
+    modifier onlyOwner {
+        require(msg.sender == owner, "only owner can perform this action");
+        _;
+    }
+
+    modifier onlyProvider {
+        require(msg.sender == providerDID, "only provider can perform this action");
+        _;
+    }
+    constructor(address _owner) {
         owner = _owner;
-        name = _name;
-        dateOfBirth = _dateOfBirth;
-        socialID = _socialID;
-        nationality = _nationality;
-        email = _email;
-        phoneNumber = _phoneNumber;
+        providerDID = msg.sender;
+    }
+
+    function store(PersonalRecord memory record) public onlyProvider returns (bool) {
+        personalRecord = record;
         return (true);
     }
 
     function verifySingleSignOn(bytes memory signature, bytes32 hash) public view returns (string memory) {
-        return verify(signature, hash) ? email : "";
+        return verify(signature, hash) ? personalRecord.email : "";
     }
 
     function verify(bytes memory signature, bytes32 hash) public view returns (bool) {
@@ -31,7 +47,7 @@ contract Identifier {
         bytes32 s;
 
         (v, r, s) = splitSignature(signature);
-//        bytes32 senderHash = keccak256(abi.encodePacked(target));
+        //        bytes32 senderHash = keccak256(abi.encodePacked(target));
 
         return (owner == address(ecrecover(hash, v, r, s)));
     }
