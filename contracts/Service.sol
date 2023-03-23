@@ -13,12 +13,12 @@ contract Service {
         _;
     }
 
-    constructor(address _owner){
+    constructor(address _owner) payable {
         owner = _owner;
         admin = msg.sender;
     }
 
-    function createISC(string memory _name, uint64 _dateOfBirth, string memory _socialID, string memory _nationality, string memory _email, string memory _phoneNumber, address _owner) public onlyOwner returns (address) {
+    function createISC(string memory _name, uint64 _dateOfBirth, string memory _socialID, string memory _nationality, string memory _email, string memory _phoneNumber, address _owner) public onlyOwner payable returns (address) {
         PersonalRecord memory record = PersonalRecord(_name, _dateOfBirth, _socialID, _nationality, _email, _phoneNumber);
         Identifier newISC = new Identifier(_owner);
         newISC.store(record);

@@ -7,12 +7,17 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Identifier = await hre.ethers.getContractFactory("Identifier");
-  const identifier = await Identifier.deploy();
+    const Service = await hre.ethers.getContractFactory("Service");
+    const service = await Service.deploy("0x0000000000000000000000000000000000000000");
+    await service.deployed();
 
-  await identifier.deployed();
+    console.log('Service deployed to:', service.address);
+    const Identifier = await hre.ethers.getContractFactory("Identifier");
+    const identifier = await Identifier.deploy("0x0000000000000000000000000000000000000000");
+    await identifier.deployed();
 
-  console.log('Identifier deployed to:', identifier.address);
+    console.log('Identifier deployed to:', identifier.address);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -20,6 +25,6 @@ async function main() {
 main()
     .then(() => process.exit(0))
     .catch(error => {
-      console.error(error);
-      process.exit(1);
+        console.error(error);
+        process.exit(1);
     });

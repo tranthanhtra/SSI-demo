@@ -11,8 +11,6 @@ struct PersonalRecord {
 }
 
 contract Identifier {
-
-
     PersonalRecord private personalRecord;
 
     address private owner = address(0);
@@ -27,12 +25,12 @@ contract Identifier {
         require(msg.sender == providerDID, "only provider can perform this action");
         _;
     }
-    constructor(address _owner) {
+    constructor(address _owner) payable {
         owner = _owner;
         providerDID = msg.sender;
     }
 
-    function store(PersonalRecord memory record) public onlyProvider returns (bool) {
+    function store(PersonalRecord memory record) public onlyProvider payable returns (bool) {
         personalRecord = record;
         return (true);
     }

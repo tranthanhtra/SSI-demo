@@ -8,6 +8,7 @@ async function main() {
     const identifier = Identifier.attach(address);
     // const value = await identifier.sfGet(0);
     // console.log("ListStorage", value.toString());
+    identifier.address.balance;
     await identifier.store("tra", 1, "1123", "vn", "tratran050101@gmail.com", "01234", '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
     // console.log(await storageFactory.sfGet(0));
 }
