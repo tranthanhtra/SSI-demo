@@ -1,20 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-struct PersonalRecord {
-    string name;
-    uint64 dateOfBirth;
-    string socialID;
-    string nationality;
-    string email;
-    string phoneNumber;
-}
+import "./Recovery.sol";
+
+    struct PersonalRecord {
+        string name;
+        uint64 dateOfBirth;
+        string socialID;
+        string nationality;
+        string email;
+        string phoneNumber;
+    }
 
 contract Identifier {
     PersonalRecord private personalRecord;
 
     address private owner = address(0);
     address providerDID;
+    Recovery recovery;
 
     modifier onlyOwner {
         require(msg.sender == owner, "only owner can perform this action");
@@ -28,11 +31,30 @@ contract Identifier {
     constructor(address _owner) payable {
         owner = _owner;
         providerDID = msg.sender;
+        Recovery RSC = new Recovery(this);
+        recovery = RSC;
+    }
+
+    function getRSCAddress() public view returns (address) {
+        return address(recovery);
+    }
+
+    function storeRecovery(address _friend1, address _friend2, address _friend3) public onlyProvider {
+        recovery.store(_friend1, _friend2, _friend3);
     }
 
     function store(PersonalRecord memory record) public onlyProvider payable returns (bool) {
         personalRecord = record;
         return (true);
+    }
+
+    function recover(address newAddress) public payable returns (bool) {
+        if (msg.sender == address(recovery)) {
+            owner = newAddress;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function verifySingleSignOn(bytes memory signature, bytes32 hash) public view returns (string memory) {

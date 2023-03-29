@@ -17,6 +17,11 @@ async function main() {
     await identifier.deployed();
 
     console.log('Identifier deployed to:', identifier.address);
+    const Recovery = await hre.ethers.getContractFactory("Recovery");
+    const recovery = await Recovery.deploy(identifier.address);
+    await recovery.deployed();
+
+    console.log('Recovery deployed to:', recovery.address);
 
 }
 

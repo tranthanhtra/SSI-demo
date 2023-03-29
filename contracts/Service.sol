@@ -25,4 +25,8 @@ contract Service {
         accounts[_socialID] = newISC;
         return address(newISC);
     }
+
+    function storeRecovery(string memory socialId, address _friend1, address _friend2, address _friend3) public onlyOwner {
+        accounts[socialId].storeRecovery(_friend1, _friend2, _friend3);
+    }
 }
