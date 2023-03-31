@@ -3,7 +3,7 @@ const hre = require("hardhat");
 async function main() {
     const accounts = await hre.ethers.provider.listAccounts();
     console.log(accounts);
-    const address = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+    const address = '0x81f4eb0C91fEc7269f5CEf7246Bb5773D320c932';
     const Identifier = await hre.ethers.getContractFactory('Identifier');
     const identifier = Identifier.attach(address);
     // const value = await identifier.sfGet(0);

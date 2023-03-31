@@ -28,10 +28,10 @@ contract Identifier {
         require(msg.sender == providerDID, "only provider can perform this action");
         _;
     }
-    constructor(address _owner) payable {
+    constructor(address _owner) {
         owner = _owner;
         providerDID = msg.sender;
-        Recovery RSC = new Recovery(this);
+        Recovery RSC = new Recovery(address(this));
         recovery = RSC;
     }
 
@@ -43,12 +43,12 @@ contract Identifier {
         recovery.store(_friend1, _friend2, _friend3);
     }
 
-    function store(PersonalRecord memory record) public onlyProvider payable returns (bool) {
+    function store(PersonalRecord memory record) public onlyProvider returns (bool) {
         personalRecord = record;
         return (true);
     }
 
-    function recover(address newAddress) public payable returns (bool) {
+    function recover(address newAddress) public returns (bool) {
         if (msg.sender == address(recovery)) {
             owner = newAddress;
             return true;
