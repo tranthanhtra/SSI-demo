@@ -23,6 +23,12 @@ async function main() {
 
     console.log('Recovery deployed to:', recovery.address);
 
+    const Credential = await hre.ethers.getContractFactory("Credential");
+    const credential = await Credential.deploy(identifier.address);
+    await credential.deployed();
+
+    console.log('Recovery deployed to:', credential.address);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

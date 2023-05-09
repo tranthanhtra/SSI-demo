@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./Recovery.sol";
+import "./Credential.sol";
 
     struct PersonalRecord {
         string name;
@@ -18,6 +19,7 @@ contract Identifier {
     address private owner = address(0);
     address providerDID;
     Recovery recovery;
+    Credential credential;
 
     modifier onlyOwner {
         require(msg.sender == owner, "only owner can perform this action");
@@ -33,6 +35,8 @@ contract Identifier {
         providerDID = msg.sender;
         Recovery RSC = new Recovery(address(this));
         recovery = RSC;
+        Credential CSC = new Credential(address(this));
+        credential = CSC;
     }
 
     function getRSCAddress() public view returns (address) {
@@ -93,5 +97,18 @@ contract Identifier {
         }
 
         return (v, r, s);
+    }
+
+    function verifyCredential(bytes32 hash) public view returns (bool) {
+        return credential.credentialActive(hash);
+    }
+
+    function addCredential(bytes32 hash, string memory zip) public returns (bool) {
+        require(msg.sender == owner, "Only the owner can perform this action");
+        return credential.addCredential(hash, zip);
+    }
+
+    function getCredential(bytes32 hash) public view returns (string memory) {
+        return credential.getCredential(hash);
     }
 }
